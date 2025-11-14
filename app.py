@@ -15,7 +15,7 @@ print("="*80)
 
 # Load the trained model
 try:
-    with open('fever_diagnosis_model.pkl', 'rb') as f:
+    with open('fever_diagnosis_model_new.pkl', 'rb') as f:
         model = pickle.load(f)
     print("✅ Model loaded successfully")
 except Exception as e:
@@ -24,7 +24,7 @@ except Exception as e:
 
 # Load label encoder
 try:
-    with open('label_encoder.pkl', 'rb') as f:
+    with open('label_encoder_new.pkl', 'rb') as f:
         label_encoder = pickle.load(f)
     print("✅ Label encoder loaded")
     print(f"   Classes: {list(label_encoder.classes_)}")
@@ -34,7 +34,7 @@ except Exception as e:
 
 # Load feature info
 try:
-    with open('model_info.json', 'r') as f:
+    with open('model_info_new.json', 'r') as f:
         model_info = json.load(f)
     feature_cols = model_info['feature_cols']
     print(f"✅ Feature info loaded")

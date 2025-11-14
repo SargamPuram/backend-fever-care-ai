@@ -1,0 +1,39 @@
+{
+  "model_name": "Gradient Boosting",
+  "cv_accuracy": 0.8432707355242567,
+  "test_accuracy": 0.8235294117647058,
+  "f1_score": 0.8254739694295331,
+  "feature_cols": [
+    "temperature",
+    "fever_days",
+    "headache",
+    "body_pain",
+    "eye_pain",
+    "nausea_vomiting",
+    "abdominal_pain",
+    "rash",
+    "bleeding",
+    "platelet_count",
+    "mosquito_exposure",
+    "travel",
+    "temp_high",
+    "temp_very_high",
+    "duration_short",
+    "duration_prolonged",
+    "platelet_low",
+    "platelet_very_low",
+    "dengue_triad",
+    "gi_symptoms"
+  ],
+  "classes": [
+    "Dengue",
+    "Malaria",
+    "Other",
+    "Typhoid",
+    "Viral"
+  ],
+  "trained_date": "2025-11-15",
+  "total_samples": 510,
+  "train_samples": 357,
+  "test_samples": 153
+}

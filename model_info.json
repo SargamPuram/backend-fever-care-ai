@@ -1,0 +1,27 @@
+{
+  "feature_cols": [
+    "temperature",
+    "fever_days",
+    "headache",
+    "body_pain",
+    "eye_pain",
+    "nausea_vomiting",
+    "abdominal_pain",
+    "rash",
+    "bleeding",
+    "platelet_count",
+    "mosquito_exposure",
+    "travel",
+    "temp_high",
+    "temp_very_high",
+    "duration_short",
+    "duration_prolonged",
+    "platelet_low",
+    "platelet_very_low",
+    "dengue_triad",
+    "gi_symptoms"
+  ],
+  "model_name": "Gradient Boosting",
+  "cv_accuracy": 0.8828218243819267,
+  "test_accuracy": 0.8367346938775511
+}

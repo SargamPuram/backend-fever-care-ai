@@ -85,22 +85,6 @@ def health():
 def predict():
     """
     Predict disease from patient symptoms
-    
-    Expected JSON format:
-    {
-        "temperature": 103.5,
-        "fever_days": 5,
-        "headache": 1,
-        "body_pain": 1,
-        "eye_pain": 1,
-        "nausea_vomiting": 0,
-        "abdominal_pain": 0,
-        "rash": 0,
-        "bleeding": 0,
-        "platelet_count": 120,
-        "mosquito_exposure": 1,
-        "travel": 0
-    }
     """
     try:
         # Get JSON data from request
@@ -152,11 +136,13 @@ def predict():
         
         # Create feature vector in correct order
         feature_vector = [all_features[col] for col in feature_cols]
-        feature_array = np.array(feature_vector).reshape(1, -1)
+        
+        # ✅ FIX: Convert to DataFrame with proper feature names
+        feature_df = pd.DataFrame([feature_vector], columns=feature_cols)
         
         # Make prediction
-        prediction_encoded = model.predict(feature_array)[0]
-        prediction_proba = model.predict_proba(feature_array)[0]
+        prediction_encoded = model.predict(feature_df)[0]
+        prediction_proba = model.predict_proba(feature_df)[0]
         
         # Decode prediction
         predicted_disease = label_encoder.inverse_transform([prediction_encoded])[0]

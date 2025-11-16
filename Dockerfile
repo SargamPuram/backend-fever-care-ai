@@ -2,7 +2,7 @@
 FROM python:3.9-slim
 
 # Set working directory in container
-WORKDIR /
+WORKDIR /app
 
 # Copy requirements first (for better caching)
 COPY requirements.txt .

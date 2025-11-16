@@ -5,13 +5,17 @@ import numpy as np
 import pandas as pd
 from flask_cors import CORS
 from sklearn.ensemble import GradientBoostingClassifier
+import os
+
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
+
 print("="*80)
 print("🏥 FEVER DIAGNOSIS API - LOADING MODEL")
 print("="*80)
+
 
 # Load the trained model
 try:
@@ -22,6 +26,7 @@ except Exception as e:
     print(f"❌ Error loading model: {e}")
     model = None
 
+
 # Load label encoder
 try:
     with open('label_encoder_new.pkl', 'rb') as f:
@@ -31,6 +36,7 @@ try:
 except Exception as e:
     print(f"❌ Error loading encoder: {e}")
     label_encoder = None
+
 
 # Load feature info
 try:
@@ -45,9 +51,11 @@ except Exception as e:
     print(f"❌ Error loading feature info: {e}")
     feature_cols = None
 
+
 print("="*80)
 print("🚀 API READY - Server starting...")
 print("="*80)
+
 
 
 @app.route('/', methods=['GET'])
@@ -66,6 +74,7 @@ def home():
     })
 
 
+
 @app.route('/health', methods=['GET'])
 def health():
     """Health check endpoint"""
@@ -81,13 +90,10 @@ def health():
     })
 
 
+
 @app.route('/predict', methods=['POST'])
 def predict():
-    """
-    Predict disease from patient symptoms
-    """
     try:
-        # Get JSON data from request
         data = request.get_json()
         
         if not data:
@@ -112,7 +118,7 @@ def predict():
             'travel': int(data.get('travel', 0))
         }
         
-        # Engineer features (same as training)
+        # Engineer features
         engineered = {
             'temp_high': int(basic_features['temperature'] >= 103),
             'temp_very_high': int(basic_features['temperature'] >= 105),
@@ -131,26 +137,24 @@ def predict():
             )
         }
         
-        # Combine all features
         all_features = {**basic_features, **engineered}
-        
-        # Create feature vector in correct order
         feature_vector = [all_features[col] for col in feature_cols]
-        
-        # ✅ FIX: Convert to DataFrame with proper feature names
         feature_df = pd.DataFrame([feature_vector], columns=feature_cols)
         
         # Make prediction
         prediction_encoded = model.predict(feature_df)[0]
         prediction_proba = model.predict_proba(feature_df)[0]
-        
-        # Decode prediction
-        predicted_disease = label_encoder.inverse_transform([prediction_encoded])[0]
+
+
+        # CORRECTED: assign predicted_disease before using it
+        predicted_disease = label_encoder.inverse_transform([prediction_encoded])[0]       
+        predicted_disease = str(predicted_disease).strip().capitalize()
         
         # Get confidence scores for all diseases
         confidence_scores = {}
         for idx, disease in enumerate(label_encoder.classes_):
-            confidence_scores[disease] = float(prediction_proba[idx] * 100)
+            disease_name = str(disease).strip().capitalize()
+            confidence_scores[disease_name] = float(prediction_proba[idx] * 100)
         
         # Sort by confidence
         sorted_predictions = sorted(
@@ -187,6 +191,8 @@ def predict():
         }), 500
 
 
+
 if __name__ == '__main__':
-    # Run Flask app
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # Get port from environment variable (Render uses PORT)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)
